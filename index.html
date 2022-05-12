@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles/mystyle.css">
+    <script src="scripts/myscript.js" defer></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0v4LLanw2qksYuRlEzO+tcaEPQogQ0KaoGN26/zrn20ImR1DfuLWnOo7aBA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>Gestión de Proyectos FCT</title>
+</head>
+<body>
+
+    <header>
+        <a href="" id="logo"><img src="img/Logo.png" alt=""></a>
+        <h1>Gestión de Proyectos FCT</h1>
+    </header>
+
+    <main>
+        <form action="" id="form-ciclos">
+            <label for="ciclos">Ciclo</label>
+            <select name="ciclos" id="ciclos"></select>
+        </form>
+        <!-- template-listado-datos -->
+        <!-- template-acciones -->
+    </main>
+
+    <template id="template-listado-datos">
+        <div id="listado-datos">
+            <h2>Listado de Alumnos</h2>
+            <!-- template-body-datos-->
+        </div>
+    </template>
+    <template id="template-body-datos">
+        <div id="body-datos">
+            <nav>
+                <a href="" id="izquierda"><<</a>
+                <a href="" id="derecha">>></a>
+            </nav>
+            <div id="tabla-datos">
+                <div class="item" id="td-cabecera">
+                    <p>Nombre</p>
+                    <p>Accion</p>
+                </div>
+                <div id="td-body">
+                    <!-- template-item -->
+                </div>
+            </div>
+        </div>
+        <div class="pie" id="td-pie">
+            <a href="" id="btn-proyecto" class="boton">Añadir Proyecto</a>
+        </div>
+    </template>
+    <template id="template-item">
+        <div class="item">
+            <p></p>
+            <div class="bt-acciones">
+                <i class="fas fa-undo-alt"></i>
+                <i class="fa fa-trash" aria-hidden="true"></i>
+            </div> 
+        </div>
+    </template>
+    <template id="template-formulario">
+        <div id="acciones">
+            <!-- span = Actualizar / Añadir -->
+            <h2><span>Actualizar</span> Datos del Proyecto</h2>
+            <form action="" id="form-acciones">
+                <p>
+                    <label for="">Nombre</label>
+                    <input type="text" name="nombre" id="nombre" size="40" class="completo campo">
+                </p>
+                <p>
+                    <label for="">NIF</label>
+                    <input type="text" name="NIF" id="nif" size="10" class="completo campo">
+                </p>
+                <p class="full-row">
+                    <label for="">Titulo del Proyecto</label>
+                    <input type="text" name="proyecto" id="proyecto" class="completo campo">
+                </p>
+                <p>
+                    <label for="">Fecha de Presentación</label>
+                    <input type="date" name="fecha" id="fecha" class="campo">
+                </p>
+                <p>
+                    <label for="">Hora de Presentación</label>
+                    <input type="time" name="hora" id="hora" class="campo">
+                </p>
+                <div class="pie full-row">
+                    <input class="boton" type="button" id="btn-enviar" value="Actualizar">
+                    <input class="boton" type="button" id="btn-cancelar" value="Cancelar">
+                </div>
+            </form>
+        </div>
+    </template>
+</body>
+</html>

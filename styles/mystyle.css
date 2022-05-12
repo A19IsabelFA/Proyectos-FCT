@@ -1,0 +1,231 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root{
+    --bg-primary: #00a8db8e;
+    --bg-primary-dark: #00a7db;
+    --bg-secundary: #96e42869;
+    --bg-secundary-dark: #7bb827;
+    --color-resaltar: #fffc3d;
+}
+
+body{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    font: 16px/1.5 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+.boton{
+    background-color: var(--bg-primary);
+    text-align: center;
+    border-radius: 10px;
+    text-transform: uppercase;
+    border: 1px solid var(--bg-primary-dark);
+    box-shadow: 10px 10px 13px 0px rgba(0,0,0,0.75);
+    -webkit-box-shadow: 10px 10px 13px 0px rgba(0,0,0,0.75);
+    -moz-box-shadow: 10px 10px 13px 0px rgba(0,0,0,0.75);
+    padding: 1% 2%;
+    outline: none;
+    cursor: pointer;
+}
+
+/* .boton:hover{
+    background-color: var(--color-resaltar);
+    border-color: var(--color-resaltar);
+}
+*/
+ 
+i:hover{
+    transform: scale(1.5);
+}
+
+/* cabecera */
+
+header{
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    grid-template-rows: auto;
+    align-items: center;
+}
+
+a#logo {
+    width: 100%;
+}
+
+a#logo img{
+    width: 100%;
+    height: auto;
+}
+
+h1{
+    text-align: center;
+    position: relative;
+    left: -100px;
+}
+
+a{
+    text-decoration: none;
+    color: black;
+}
+/* main */
+main{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 20px;
+}
+
+/* formulario ciclos */
+#form-ciclos{
+    width: max-content;
+    margin: 0 auto;
+    padding: 10px 15px;
+    background-color: var(--bg-primary);
+    border-radius: 20px;
+    font-size: 1.5rem;
+}
+
+#form-ciclos select{
+    padding: 5px;
+    border-radius: 10px;
+    margin-bottom: 5px;
+}
+
+/* listado-datos */
+#listado-datos, #acciones{
+    min-width: 60%;
+    width: auto;
+    margin: 0 auto;
+    border: 1px solid black;
+    border-radius: 20px;
+    padding: 2%;
+    box-shadow: 11px 10px 5px 0px rgba(0,0,0,0.75);
+    -webkit-box-shadow: 11px 10px 5px 0px rgba(0,0,0,0.75);
+    -moz-box-shadow: 11px 10px 5px 0px rgba(0,0,0,0.75);
+}
+h2{
+    text-align: center;
+}
+/* menu de desplazamiento*/
+nav{
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(2,1fr);
+    justify-content: space-between;
+    font-size: 1.5rem;
+}
+
+nav a{
+    width: max-content;
+}
+
+#derecha{
+    justify-self: end;
+    grid-column: 2/4;
+}
+
+nav a:hover{
+    color: orangered;
+}
+
+/* section tabla-datos */
+#tabla-datos, #td-body{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.item{
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    grid-template-rows: auto;
+}
+
+#td-cabecera p{
+    background-color: white;
+    text-align: center;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+.item:nth-child(even) p{
+    background-color: var(--bg-secundary-dark);
+    padding: 1% 2%;
+}
+
+.item:nth-child(odd) p{
+    background-color: var(--bg-secundary);
+    padding: 1% 2%;
+
+}
+
+.fa-undo-alt{
+    color: green;
+}
+
+.fa-trash {
+    color: red;
+}
+
+i.off,a.off {
+    color:gray;
+}
+
+div.bt-acciones{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+.pie {
+    text-align: center;
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    gap:30px;
+}
+
+/*formulario de actualización de datos */
+#form-acciones{
+    display: grid;
+    grid-template-columns: repeat(2, auto);
+    grid-template-rows: auto;
+    row-gap: 10px;
+    column-gap: 6px;
+    margin-top: 20px;
+}
+
+#form-acciones p{
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    gap: 10px;
+}
+
+#form-acciones p input.completo{
+    flex: 1;
+}
+
+.full-row{
+    grid-column: 1/3;
+}
+
+.campo{
+    padding: 0.3rem;
+} 
+
+input[type=submit]{
+    font-size: 1rem;
+}
+
+input[type=button]{
+    font-size: 1rem;
+}
+
+i{
+ padding: 10px;   
+}
