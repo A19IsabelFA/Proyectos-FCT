@@ -5,6 +5,7 @@ const d = document,
   tempForm = d.querySelector("#template-formulario"),
   select = d.querySelector("#ciclos");
 let ciclos = [];
+let alumnos = [];
 
 //FUNCIONES
 function ajax(options) {
@@ -30,30 +31,58 @@ function ajax(options) {
     .catch(er => error(er))
 }
 
-function cargarCiclos() {
-  console.log(ciclos)
-  let options =`<option value="">Elige un Ciclo</option>`
-  ciclos.forEach(el => {
-    options+=`<option value="">${el.ciclo}</option>`
-  });
-  select.innerHTML =options;
-}
 function procesarError(error) {
   console.log("Error!");
   let msg = error.status.text || "Ocurrio un error"
-  console.log(`Error ${error.status}: ${msg}`) 
+  console.log(`Error ${error.status}: ${msg}`)
+}
+
+function cargarCiclos() {
+  //console.log(ciclos)
+  let valor = 1;
+  let options = `<option value="0">Elige un Ciclo</option>`
+  ciclos.forEach(el => {
+    options += `<option value="${valor++}">${el.ciclo}</option>`
+  });
+  select.innerHTML = options;
+}
+
+function cargarAlumnos() {
+  //console.log(alumnos)
+  let proyectos = []
+  alumnos.forEach(el => {
+    if (el.ciclo == select.value) {
+      proyectos.push(el)
+    }
+  })
+
+
 }
 
 // EVENTOS
 
-// AL CARGAR LA PAGINA
-document.addEventListener("DOMContentLoaded", e => {
+// al cargar la pagina
+d.addEventListener("DOMContentLoaded", e => {
   ajax({
     url: "http://localhost:3000/ciclos",
     method: "GET",
     succes: (opciones) => {
       ciclos = opciones;
       cargarCiclos()
+    },
+    error: (er) => procesarError(er),
+  })
+
+})
+
+// al escoger ciclo
+d.addEventListener('change', e => {
+  ajax({
+    url: "http://localhost:3000/alumnos",
+    method: "GET",
+    succes: (opciones) => {
+      alumnos = opciones;
+      cargarAlumnos()
     },
     error: (er) => procesarError(er),
   })
