@@ -48,15 +48,30 @@ function cargarCiclos() {
 }
 
 function cargarAlumnos() {
-  //console.log(alumnos)
+  console.log(alumnos)
   let proyectos = []
   alumnos.forEach(el => {
     if (el.ciclo == select.value) {
       proyectos.push(el)
     }
   })
+  renderAlumnos(proyectos)
+}
 
-
+function renderAlumnos(alum) {
+  const fragmento = document.createDocumentFragment()
+  if (alun.length > 0) {
+    alum.forEach(el => {
+      console.log(el.nombre)
+      p = tempDatos.cloneNode(true)
+      nombre= p.querySelectorAll(p)[0];
+      it= p.querySelectorAll(p)[1];
+      nombre.innerHTML=el.nombre;
+    })
+  } else {
+    fragmento.innerHTML = "No exixten proyectos en este ciclo"
+    tempListado.appendChild(fragmento)
+  }
 }
 
 // EVENTOS
