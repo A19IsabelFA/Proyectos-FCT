@@ -52,6 +52,7 @@ function renderAlumnos(alumnos) {
   if (document.querySelector("#listado-datos")) {
     document.querySelector("#listado-datos").remove()
   }
+  let btn = `<div class="pie full-row"><input class="boton" type="button" id="addProyectos" value="Añadir Proyecto"></div>`;
   const fragmento = document.createDocumentFragment()
   if (alumnos.length > 0) {
     alumnos.forEach(el => {
@@ -66,13 +67,16 @@ function renderAlumnos(alumnos) {
     tbody.appendChild(fragmento);
     let lista = tempListado.cloneNode(true);
     lista.querySelector("#listado-datos").appendChild(tbody);
+    lista.appendChild(btn);
     listado.appendChild(lista);
   } else {
     let lista = tempListado.cloneNode(true);
-    lista.querySelector("h2").innerHTML ="NO EXISTEN ALUMNOS EN ESTE CICLO";
+    lista.querySelector("h2").innerHTML ="NO HAY NINGÚN PROYECTO";
+    lista.appendChild(btn);
     listado.appendChild(lista);
   }
-
+  
+  
 }
 
 // EVENTOS
