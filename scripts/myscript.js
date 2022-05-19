@@ -1,11 +1,12 @@
 const d = document,
-  tempListado = d.querySelector("#template-listado-datos"),
-  tempDatos = d.querySelector("#template-body-datos"),
-  tempItem = d.querySelector("#template-item"),
-  tempForm = d.querySelector("#template-formulario"),
-  select = d.querySelector("#ciclos");
-let ciclos = [];
-let alumnos = [];
+  tempListado = d.querySelector("#template-listado-datos").content,
+  tempDatos = d.querySelector("#template-body-datos").content,
+  tempItem = d.querySelector("#template-item").content,
+  tempForm = d.querySelector("#template-formulario").content,
+  select = d.querySelector("#ciclos"),
+  listado = d.querySelector("main")
+
+
 
 //FUNCIONES
 function ajax(options) {
@@ -37,41 +38,41 @@ function procesarError(error) {
   console.log(`Error ${error.status}: ${msg}`)
 }
 
-function cargarCiclos() {
-  //console.log(ciclos)
-  let valor = 1;
+function cargarCiclos(ciclos) {
+  // console.log(ciclos)
   let options = `<option value="0">Elige un Ciclo</option>`
   ciclos.forEach(el => {
-    options += `<option value="${valor++}">${el.ciclo}</option>`
+    options += `<option value="${el.id}">${el.ciclo}</option>`
   });
   select.innerHTML = options;
 }
 
-function cargarAlumnos() {
-  console.log(alumnos)
-  let proyectos = []
-  alumnos.forEach(el => {
-    if (el.ciclo == select.value) {
-      proyectos.push(el)
-    }
-  })
-  renderAlumnos(proyectos)
-}
-
-function renderAlumnos(alum) {
-  const fragmento = document.createDocumentFragment()
-  if (alun.length > 0) {
-    alum.forEach(el => {
-      console.log(el.nombre)
-      p = tempDatos.cloneNode(true)
-      nombre= p.querySelectorAll(p)[0];
-      it= p.querySelectorAll(p)[1];
-      nombre.innerHTML=el.nombre;
-    })
-  } else {
-    fragmento.innerHTML = "No exixten proyectos en este ciclo"
-    tempListado.appendChild(fragmento)
+function renderAlumnos(alumnos) {
+  // console.log(alumnos)
+  if (document.querySelector("#listado-datos")) {
+    document.querySelector("#listado-datos").remove()
   }
+  const fragmento = document.createDocumentFragment()
+  if (alumnos.length > 0) {
+    alumnos.forEach(el => {
+      let item = tempItem.cloneNode(true)
+      let nombre = item.querySelector("p");
+      nombre.innerHTML = el.nombre;
+      // console.log(nombre)
+      fragmento.appendChild(item)
+    })
+    let datos = tempDatos.cloneNode(true)
+    let tbody = datos.querySelector("#td-body")
+    tbody.appendChild(fragmento);
+    let lista = tempListado.cloneNode(true);
+    lista.querySelector("#listado-datos").appendChild(tbody);
+    listado.appendChild(lista);
+  } else {
+    let lista = tempListado.cloneNode(true);
+    lista.querySelector("h2").innerHTML ="NO EXISTEN ALUMNOS EN ESTE CICLO";
+    listado.appendChild(lista);
+  }
+
 }
 
 // EVENTOS
@@ -82,8 +83,7 @@ d.addEventListener("DOMContentLoaded", e => {
     url: "http://localhost:3000/ciclos",
     method: "GET",
     succes: (opciones) => {
-      ciclos = opciones;
-      cargarCiclos()
+      cargarCiclos(opciones)
     },
     error: (er) => procesarError(er),
   })
@@ -93,11 +93,10 @@ d.addEventListener("DOMContentLoaded", e => {
 // al escoger ciclo
 d.addEventListener('change', e => {
   ajax({
-    url: "http://localhost:3000/alumnos",
+    url: `http://localhost:3000/alumnos?ciclo=${select.value}`,
     method: "GET",
     succes: (opciones) => {
-      alumnos = opciones;
-      cargarAlumnos()
+      renderAlumnos(opciones)
     },
     error: (er) => procesarError(er),
   })
