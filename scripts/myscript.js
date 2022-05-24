@@ -4,7 +4,7 @@ const d = document,
   tempItem = d.querySelector("#template-item").content,
   tempForm = d.querySelector("#template-formulario").content,
   select = d.querySelector("#ciclos"),
-  listado = d.querySelector("main")
+  listado = d.querySelector("main");
 
 
 
@@ -65,18 +65,14 @@ function renderAlumnos(alumnos) {
     let datos = tempDatos.cloneNode(true)
     let tbody = datos.querySelector("#td-body")
     tbody.appendChild(fragmento);
+    console.log(tbody)
     let lista = tempListado.cloneNode(true);
-    lista.querySelector("#listado-datos").appendChild(tbody);
-    lista.appendChild(btn);
+    lista.querySelector("#listado-datos").appendChild(datos);
     listado.appendChild(lista);
   } else {
     let lista = tempListado.cloneNode(true);
     lista.querySelector("h2").innerHTML ="NO HAY NINGÚN PROYECTO";
-    lista.appendChild(btn);
-    listado.appendChild(lista);
   }
-  
-  
 }
 
 // EVENTOS
