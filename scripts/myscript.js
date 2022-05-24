@@ -6,7 +6,7 @@ const d = document,
   select = d.querySelector("#ciclos"),
   listado = d.querySelector("main");
 
-
+let btn;
 
 //FUNCIONES
 function ajax(options) {
@@ -52,7 +52,6 @@ function renderAlumnos(alumnos) {
   if (document.querySelector("#listado-datos")) {
     document.querySelector("#listado-datos").remove()
   }
-  let btn = `<div class="pie full-row"><input class="boton" type="button" id="addProyectos" value="Añadir Proyecto"></div>`;
   const fragmento = document.createDocumentFragment()
   if (alumnos.length > 0) {
     alumnos.forEach(el => {
@@ -65,14 +64,25 @@ function renderAlumnos(alumnos) {
     let datos = tempDatos.cloneNode(true)
     let tbody = datos.querySelector("#td-body")
     tbody.appendChild(fragmento);
-    console.log(tbody)
     let lista = tempListado.cloneNode(true);
     lista.querySelector("#listado-datos").appendChild(datos);
     listado.appendChild(lista);
   } else {
     let lista = tempListado.cloneNode(true);
-    lista.querySelector("h2").innerHTML ="NO HAY NINGÚN PROYECTO";
+    lista.querySelector("h2").innerHTML = "NO HAY NINGÚN PROYECTO";
   }
+  btn = d.querySelector('#btn-proyecto');
+  btn.href = '#';
+  btn.setAttribute('onclick', "cargarFormulario();return false;")
+}
+
+function cargarFormulario() {
+  let formu = tempForm.cloneNode(true);
+  listado.appendChild(formu);
+}
+
+function cancelar() {
+  d.querySelector("#accioness").remove()
 }
 
 // EVENTOS
@@ -100,4 +110,6 @@ d.addEventListener('change', e => {
     },
     error: (er) => procesarError(er),
   })
+
+
 })
