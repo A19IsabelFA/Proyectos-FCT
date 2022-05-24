@@ -69,7 +69,6 @@ function renderAlumnos(alumnos) {
     let lista = tempListado.cloneNode(true);
     lista.querySelector("h2").innerHTML = "NO HAY NINGÚN PROYECTO";
     let datos = tempDatos.cloneNode(true)
-    datos.querySelector("#td-body").appendChild();
     lista.querySelector("#listado-datos").appendChild(datos);
     listado.appendChild(lista);
   }
@@ -82,7 +81,7 @@ function cargarFormulario() {
   siExisteBorrar('#acciones');
   let formu = tempForm.cloneNode(true);
   listado.appendChild(formu);
-  btn.setAttribute('disabled',true)
+  btn.setAttribute('disabled', true)
 }
 
 function siExisteBorrar(id) {
