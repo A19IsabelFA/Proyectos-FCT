@@ -49,9 +49,8 @@ function cargarCiclos(ciclos) {
 
 function renderAlumnos(alumnos) {
   // console.log(alumnos)
-  if (document.querySelector("#listado-datos")) {
-    document.querySelector("#listado-datos").remove()
-  }
+  siExisteBorrar('#listado-datos')
+  siExisteBorrar('#acciones');
   const fragmento = document.createDocumentFragment()
   if (alumnos.length > 0) {
     alumnos.forEach(el => {
@@ -62,14 +61,17 @@ function renderAlumnos(alumnos) {
       fragmento.appendChild(item)
     })
     let datos = tempDatos.cloneNode(true)
-    let tbody = datos.querySelector("#td-body")
-    tbody.appendChild(fragmento);
-    let lista = tempListado.cloneNode(true);
+    datos.querySelector("#td-body").appendChild(fragmento);
+    let lista = tempListado.cloneNode(true)
     lista.querySelector("#listado-datos").appendChild(datos);
     listado.appendChild(lista);
   } else {
     let lista = tempListado.cloneNode(true);
     lista.querySelector("h2").innerHTML = "NO HAY NINGÚN PROYECTO";
+    let datos = tempDatos.cloneNode(true)
+    datos.querySelector("#td-body").appendChild();
+    lista.querySelector("#listado-datos").appendChild(datos);
+    listado.appendChild(lista);
   }
   btn = d.querySelector('#btn-proyecto');
   btn.href = '#';
@@ -77,12 +79,16 @@ function renderAlumnos(alumnos) {
 }
 
 function cargarFormulario() {
+  siExisteBorrar('#acciones');
   let formu = tempForm.cloneNode(true);
   listado.appendChild(formu);
+  btn.setAttribute('disabled',true)
 }
 
-function cancelar() {
-  d.querySelector("#accioness").remove()
+function siExisteBorrar(id) {
+  if (d.querySelector(id)) {
+    d.querySelector(id).remove()
+  }
 }
 
 // EVENTOS
