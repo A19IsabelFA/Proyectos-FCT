@@ -74,7 +74,15 @@ function renderAlumnos(alumnos) {
   }
   btn = d.querySelector('#btn-proyecto');
   btn.href = '#';
-  btn.setAttribute('onclick', "cargarFormulario()")
+  //btn.setAttribute('onclick', "cargarFormulario()")
+  btn.addEventListener('click', e => {
+    cargarFormulario()
+    d.querySelector('#btn-enviar').value = "AÑADIR";
+  })
+}
+
+function addProyecto() {
+
 }
 
 function cargarFormulario() {
@@ -82,8 +90,8 @@ function cargarFormulario() {
   let formu = tempForm.cloneNode(true);
   listado.appendChild(formu);
   activarDesactivar();
-  d.querySelector('#btn-enviar').value = "AÑADIR";
   d.querySelector('#btn-cancelar').addEventListener('click', cancelar)
+  d.querySelector('#btn-enviar').addEventListener('click', addProyecto)
 }
 // activa o desactiva el select y el boton añadir proyecto
 function activarDesactivar() {
