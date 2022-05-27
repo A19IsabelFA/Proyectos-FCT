@@ -74,20 +74,38 @@ function renderAlumnos(alumnos) {
   }
   btn = d.querySelector('#btn-proyecto');
   btn.href = '#';
-  btn.setAttribute('onclick', "cargarFormulario();return false;")
+  btn.setAttribute('onclick', "cargarFormulario()")
 }
 
 function cargarFormulario() {
   siExisteBorrar('#acciones');
   let formu = tempForm.cloneNode(true);
   listado.appendChild(formu);
-  btn.setAttribute('disabled', true)
+  activarDesactivar();
+  d.querySelector('#btn-enviar').value = "AÑADIR";
+  d.querySelector('#btn-cancelar').addEventListener('click', cancelar)
 }
+// activa o desactiva el select y el boton añadir proyecto
+function activarDesactivar() {
+  if (d.querySelector("#btn-proyecto.off")) {
+    select.disabled = false
+    d.querySelector("#btn-proyecto").classList.remove("off")
+  } else {
+    select.disabled = true
+    d.querySelector("#btn-proyecto").classList.add("off")
+  }
 
+}
+// si existe el id que se le pasa lo borra
 function siExisteBorrar(id) {
   if (d.querySelector(id)) {
     d.querySelector(id).remove()
   }
+}
+
+function cancelar() {
+  siExisteBorrar('#acciones');
+  activarDesactivar();
 }
 
 // EVENTOS
