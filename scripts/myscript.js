@@ -65,12 +65,15 @@ function renderAlumnos(alumnos) {
     let lista = tempListado.cloneNode(true)
     lista.querySelector("#listado-datos").appendChild(datos);
     listado.appendChild(lista);
-  } else {
+  } else if (select.value != 0) {
     let lista = tempListado.cloneNode(true);
-    lista.querySelector("h2").innerHTML = "NO HAY NINGÚN PROYECTO";
+    lista.querySelector("h2").innerHTML = "No hay ningún proyecto";
     let datos = tempDatos.cloneNode(true)
     lista.querySelector("#listado-datos").appendChild(datos);
     listado.appendChild(lista);
+    d.querySelectorAll('#tabla-datos p').forEach(el => {
+      el.innerHTML = "";
+    });
   }
   btn = d.querySelector('#btn-proyecto');
   btn.href = '#';
@@ -80,8 +83,16 @@ function renderAlumnos(alumnos) {
     d.querySelector('#btn-enviar').value = "AÑADIR";
   })
 }
-
+// añade nuevos proyectos
 function addProyecto() {
+
+}
+// actualiza proyectos
+function putProyecto() {
+
+}
+// elimina proyectos
+function dellProyecto() {
 
 }
 
