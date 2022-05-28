@@ -5,7 +5,7 @@ const d = document,
   tempForm = d.querySelector("#template-formulario").content,
   select = d.querySelector("#ciclos"),
   listado = d.querySelector("main");
-
+let metodo = "";
 //FUNCIONES
 function ajax(options) {
   let {
@@ -80,22 +80,45 @@ function renderAlumnos(alumnos) {
     cargarFormulario()
     d.querySelector('#btn-enviar').value = "AÑADIR";
   })
+  d.querySelectorAll('i.fa-undo-alt').forEach(el => {
+    el.addEventListener('click', e => {
+      e.preventDefault()
+      cargarFormulario()
+      metodo = "PUT"
+    })
+  })
+  d.querySelectorAll('i.fa-trash').forEach(el => {
+    el.addEventListener('click', e => {
+      e.preventDefault()
+      enviarDatos("DELETE", e.target.dataset.alumno)
+    })
+  })
 
 }
 // añade, actualiza o borra segun el metodo que sele pase
-function enviarDatos(metodo, id = "", data) {
-  if (metodo == "POST") {
-    id = "";
+function enviarDatos(metodo, id = "", data = "") {
+  let formulario = d.querySelector("#form-acciones")
+  if (metodo == "POST" || metodo == "PUT") {
+    data = cargarDatos()
   }
+  console.log('data:', metodo)
   ajax({
     url: (id > 0) ? `http://localhost:3000/alumnos/${id}` : `http://localhost:3000/alumnos`,
     method: metodo,
     succes: (opciones) => {
-      renderAlumnos(opciones);
+      console.log("datos", opciones)
+      getDatos();
       activarDesactivar();
     },
     error: (er) => procesarError(er),
-    datos: data
+    datos: {
+      nombre: formulario.nombre.value,
+      nif: formulario.nif.value,
+      proyecto: formulario.proyecto.value,
+      ciclo: select.value,
+      fecha: formulario.fecha.value,
+      hora: formulario.hora.value
+    }
   })
 }
 
@@ -103,23 +126,12 @@ function cargarFormulario() {
   siExisteBorrar('#acciones');
   let formu = tempForm.cloneNode(true);
   listado.appendChild(formu);
-  activarDesactivar();
+  activarDesactivar()
+  // eventos botones formulario
   d.querySelector('#btn-cancelar').addEventListener('click', cancelar)
-  d.querySelector('#btn-enviar').addEventListener(e => {
+  d.querySelector('#btn-enviar').addEventListener('click', e => {
     e.preventDefault()
-    enviarDatos("POST", e.target.dataset.alumno, cargarDatos)
-  })
-  d.querySelectorAll('i .fa-undo-alt').forEach(el => {
-    el.addEventListener('click', e => {
-      e.preventDefault()
-      enviarDatos("PUT", e.target.dataset.alumno, cargarDatos)
-    })
-  })
-  d.querySelectorAll('i .fa-trash').forEach(el => {
-    el.addEventListener('click', e => {
-      e.preventDefault()
-      enviarDatos("DELETE", e.target.dataset.alumno)
-    })
+    enviarDatos(metodo)
   })
 }
 // activa o desactiva el select, el boton añadir proyecto y los botones de elimnar o actualizar
@@ -141,7 +153,7 @@ function cancelar() {
   siExisteBorrar('#acciones');
   activarDesactivar();
 }
-
+// recoge los datos del formulario
 function cargarDatos() {
   let formulario = d.querySelector("#form-acciones")
   let datos = {
@@ -152,7 +164,18 @@ function cargarDatos() {
     fecha: formulario.fecha.value,
     hora: formulario.hora.value
   }
-  return datos
+  return datos;
+}
+// obtener datos de la BBDD
+function getDatos() {
+  ajax({
+    url: `http://localhost:3000/alumnos?ciclo=${select.value}`,
+    method: "GET",
+    succes: (opciones) => {
+      renderAlumnos(opciones)
+    },
+    error: (er) => procesarError(er),
+  })
 }
 // EVENTOS
 
@@ -170,15 +193,7 @@ d.addEventListener("DOMContentLoaded", e => {
 })
 
 // al escoger ciclo
-d.addEventListener('change', e => {
-  ajax({
-    url: `http://localhost:3000/alumnos?ciclo=${select.value}`,
-    method: "GET",
-    succes: (opciones) => {
-      renderAlumnos(opciones)
-    },
-    error: (er) => procesarError(er),
-  })
-
-
+select.addEventListener('change', e => {
+  getDatos()
+  metodo = "POST"
 })
