@@ -6,8 +6,6 @@ const d = document,
   select = d.querySelector("#ciclos"),
   listado = d.querySelector("main");
 
-let metodo = "PUT";
-
 //FUNCIONES
 function ajax(options) {
   let {
@@ -81,24 +79,14 @@ function renderAlumnos(alumnos) {
     e.preventDefault();
     cargarFormulario()
     d.querySelector('#btn-enviar').value = "AÑADIR";
-    metodo = "POST"
   })
-  d.querySelectorAll('i .fa-undo-alt').forEach(el => {
-    el.addEventListener('click', e => {
-      e.preventDefault()
-      enviarDatos("PUT", e.target.dataset.alumno)
-    })
-  })
-  d.querySelectorAll('i .fa-trash').forEach(el => {
-    el.addEventListener('click', e => {
-      e.preventDefault()
-      enviarDatos("DELETE", e.target.dataset.alumno)
-    })
-  })
+
 }
 // añade, actualiza o borra segun el metodo que sele pase
-function enviarDatos(metodo, id = "") {
-  let formulario = d.querySelector("#form-acciones")
+function enviarDatos(metodo, id = "", data) {
+  if (metodo == "POST") {
+    id = "";
+  }
   ajax({
     url: (id > 0) ? `http://localhost:3000/alumnos/${id}` : `http://localhost:3000/alumnos`,
     method: metodo,
@@ -107,14 +95,7 @@ function enviarDatos(metodo, id = "") {
       activarDesactivar();
     },
     error: (er) => procesarError(er),
-    datos: {
-      nombre: formulario.nombre.value,
-      nif: formulario.nif.value,
-      proyecto: formulario.proyecto.value,
-      ciclo: select.value,
-      fecha: formulario.fecha.value,
-      hora: formulario.hora.value
-    }
+    datos: data
   })
 }
 
@@ -124,12 +105,24 @@ function cargarFormulario() {
   listado.appendChild(formu);
   activarDesactivar();
   d.querySelector('#btn-cancelar').addEventListener('click', cancelar)
-  d.querySelector('#btn-enviar').addEventListener('click', e => {
-    e.preventDefault();
-    enviarDatos(metodo)
+  d.querySelector('#btn-enviar').addEventListener(e => {
+    e.preventDefault()
+    enviarDatos("POST", e.target.dataset.alumno, cargarDatos)
+  })
+  d.querySelectorAll('i .fa-undo-alt').forEach(el => {
+    el.addEventListener('click', e => {
+      e.preventDefault()
+      enviarDatos("PUT", e.target.dataset.alumno, cargarDatos)
+    })
+  })
+  d.querySelectorAll('i .fa-trash').forEach(el => {
+    el.addEventListener('click', e => {
+      e.preventDefault()
+      enviarDatos("DELETE", e.target.dataset.alumno)
+    })
   })
 }
-// activa o desactiva el select y el boton añadir proyecto
+// activa o desactiva el select, el boton añadir proyecto y los botones de elimnar o actualizar
 function activarDesactivar() {
   (d.querySelector("#btn-proyecto.off")) ? select.disabled = false: select.disabled = true
   d.querySelector("#btn-proyecto").classList.toggle("off")
@@ -149,6 +142,18 @@ function cancelar() {
   activarDesactivar();
 }
 
+function cargarDatos() {
+  let formulario = d.querySelector("#form-acciones")
+  let datos = {
+    nombre: formulario.nombre.value,
+    nif: formulario.nif.value,
+    proyecto: formulario.proyecto.value,
+    ciclo: select.value,
+    fecha: formulario.fecha.value,
+    hora: formulario.hora.value
+  }
+  return datos
+}
 // EVENTOS
 
 // al cargar la pagina
