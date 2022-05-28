@@ -50,10 +50,13 @@ function renderAlumnos(alumnos) {
   siExisteBorrar('#listado-datos')
   siExisteBorrar('#acciones');
   const fragmento = document.createDocumentFragment()
+  console.log(alumnos)
   if (alumnos.length > 0) {
     alumnos.forEach(el => {
       let item = tempItem.cloneNode(true)
       let nombre = item.querySelector("p");
+      let acciones = item.querySelectorAll("i")
+      acciones.forEach(enlace => enlace.dataset.alumno = el.id)
       nombre.innerHTML = el.nombre;
       // console.log(nombre)
       fragmento.appendChild(item)
@@ -79,13 +82,25 @@ function renderAlumnos(alumnos) {
     e.preventDefault();
     cargarFormulario()
     d.querySelector('#btn-enviar').value = "AÑADIR";
+    d.querySelector("span").innerHTML = "Añadir"
+    metodo = "POST"
   })
   d.querySelectorAll('i.fa-undo-alt').forEach(el => {
+    metodo = "PUT"
     el.addEventListener('click', e => {
       e.preventDefault()
-      cargarFormulario()
-      metodo = "PUT"
+      ajax({
+        url: `http://localhost:3000/alumnos/${e.target.dataset.alumno}`,
+        method: "GET",
+        succes: (opciones) => {
+          cargarFormulario(opciones)
+          enviarDatos(metodo,e.target.dataset.alumno)
+        },
+        error: (er) => procesarError(er),
+      })
+
     })
+
   })
   d.querySelectorAll('i.fa-trash').forEach(el => {
     el.addEventListener('click', e => {
@@ -98,10 +113,11 @@ function renderAlumnos(alumnos) {
 // añade, actualiza o borra segun el metodo que sele pase
 function enviarDatos(metodo, id = "", data = "") {
   let formulario = d.querySelector("#form-acciones")
+  console.log(metodo);
   if (metodo == "POST" || metodo == "PUT") {
     data = cargarDatos()
   }
-  console.log('data:', metodo)
+  console.log('data:', metodo,id) 
   ajax({
     url: (id > 0) ? `http://localhost:3000/alumnos/${id}` : `http://localhost:3000/alumnos`,
     method: metodo,
@@ -111,20 +127,20 @@ function enviarDatos(metodo, id = "", data = "") {
       activarDesactivar();
     },
     error: (er) => procesarError(er),
-    datos: {
-      nombre: formulario.nombre.value,
-      nif: formulario.nif.value,
-      proyecto: formulario.proyecto.value,
-      ciclo: select.value,
-      fecha: formulario.fecha.value,
-      hora: formulario.hora.value
-    }
+    datos: data
   })
 }
 
-function cargarFormulario() {
+function cargarFormulario(datos = null) {
   siExisteBorrar('#acciones');
   let formu = tempForm.cloneNode(true);
+  if (datos) {
+    formu.querySelector("#nombre").value = datos.nombre
+    formu.querySelector("#nif").value = datos.nif
+    formu.querySelector("#proyecto").value = datos.proyecto
+    formu.querySelector("#fecha").value = datos.fecha
+    formu.querySelector("#hora").value = datos.hora
+  }
   listado.appendChild(formu);
   activarDesactivar()
   // eventos botones formulario
@@ -193,7 +209,4 @@ d.addEventListener("DOMContentLoaded", e => {
 })
 
 // al escoger ciclo
-select.addEventListener('change', e => {
-  getDatos()
-  metodo = "POST"
-})
+select.addEventListener('change', getDatos)
