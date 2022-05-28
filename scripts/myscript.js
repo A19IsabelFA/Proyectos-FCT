@@ -6,7 +6,7 @@ const d = document,
   select = d.querySelector("#ciclos"),
   listado = d.querySelector("main");
 
-let btn;
+let metodo = "PUT";
 
 //FUNCIONES
 function ajax(options) {
@@ -75,25 +75,47 @@ function renderAlumnos(alumnos) {
       el.innerHTML = "";
     });
   }
-  btn = d.querySelector('#btn-proyecto');
-  btn.href = '#';
-  //btn.setAttribute('onclick', "cargarFormulario()")
-  btn.addEventListener('click', e => {
+  d.querySelector('#btn-proyecto').href = '#';
+  //d.querySelector('#btn-proyecto').setAttribute('onclick', "cargarFormulario()")
+  d.querySelector('#btn-proyecto').addEventListener('click', e => {
+    e.preventDefault();
     cargarFormulario()
     d.querySelector('#btn-enviar').value = "AÑADIR";
+    metodo = "POST"
+  })
+  d.querySelectorAll('i .fa-undo-alt').forEach(el => {
+    el.addEventListener('click', e => {
+      e.preventDefault()
+      enviarDatos("PUT", e.target.dataset.alumno)
+    })
+  })
+  d.querySelectorAll('i .fa-trash').forEach(el => {
+    el.addEventListener('click', e => {
+      e.preventDefault()
+      enviarDatos("DELETE", e.target.dataset.alumno)
+    })
   })
 }
-// añade nuevos proyectos
-function addProyecto() {
-
-}
-// actualiza proyectos
-function putProyecto() {
-
-}
-// elimina proyectos
-function dellProyecto() {
-
+// añade, actualiza o borra segun el metodo que sele pase
+function enviarDatos(metodo, id = "") {
+  let formulario = d.querySelector("#form-acciones")
+  ajax({
+    url: (id > 0) ? `http://localhost:3000/alumnos/${id}` : `http://localhost:3000/alumnos`,
+    method: metodo,
+    succes: (opciones) => {
+      renderAlumnos(opciones);
+      activarDesactivar();
+    },
+    error: (er) => procesarError(er),
+    datos: {
+      nombre: formulario.nombre.value,
+      nif: formulario.nif.value,
+      proyecto: formulario.proyecto.value,
+      ciclo: select.value,
+      fecha: formulario.fecha.value,
+      hora: formulario.hora.value
+    }
+  })
 }
 
 function cargarFormulario() {
@@ -102,18 +124,18 @@ function cargarFormulario() {
   listado.appendChild(formu);
   activarDesactivar();
   d.querySelector('#btn-cancelar').addEventListener('click', cancelar)
-  d.querySelector('#btn-enviar').addEventListener('click', addProyecto)
+  d.querySelector('#btn-enviar').addEventListener('click', e => {
+    e.preventDefault();
+    enviarDatos(metodo)
+  })
 }
 // activa o desactiva el select y el boton añadir proyecto
 function activarDesactivar() {
-  if (d.querySelector("#btn-proyecto.off")) {
-    select.disabled = false
-    d.querySelector("#btn-proyecto").classList.remove("off")
-  } else {
-    select.disabled = true
-    d.querySelector("#btn-proyecto").classList.add("off")
-  }
-
+  (d.querySelector("#btn-proyecto.off")) ? select.disabled = false: select.disabled = true
+  d.querySelector("#btn-proyecto").classList.toggle("off")
+  d.querySelectorAll('i').forEach(el => {
+    el.classList.toggle("off")
+  })
 }
 // si existe el id que se le pasa lo borra
 function siExisteBorrar(id) {
@@ -121,7 +143,7 @@ function siExisteBorrar(id) {
     d.querySelector(id).remove()
   }
 }
-
+// cierra el formulario
 function cancelar() {
   siExisteBorrar('#acciones');
   activarDesactivar();
