@@ -6,6 +6,7 @@ const d = document,
   select = d.querySelector("#ciclos"),
   listado = d.querySelector("main");
 let metodo = "";
+let id = "";
 //FUNCIONES
 function ajax(options) {
   let {
@@ -84,17 +85,18 @@ function renderAlumnos(alumnos) {
     d.querySelector('#btn-enviar').value = "AÑADIR";
     d.querySelector("span").innerHTML = "Añadir"
     metodo = "POST"
+    id = "";
   })
   d.querySelectorAll('i.fa-undo-alt').forEach(el => {
     metodo = "PUT"
     el.addEventListener('click', e => {
       e.preventDefault()
+      id = e.target.dataset.alumno;
       ajax({
         url: `http://localhost:3000/alumnos/${e.target.dataset.alumno}`,
         method: "GET",
         succes: (opciones) => {
           cargarFormulario(opciones)
-          enviarDatos(metodo,e.target.dataset.alumno)
         },
         error: (er) => procesarError(er),
       })
@@ -105,26 +107,29 @@ function renderAlumnos(alumnos) {
   d.querySelectorAll('i.fa-trash').forEach(el => {
     el.addEventListener('click', e => {
       e.preventDefault()
-      enviarDatos("DELETE", e.target.dataset.alumno)
+      id = e.target.dataset.alumno
+      enviarDatos("DELETE", id)
     })
   })
 
 }
 // añade, actualiza o borra segun el metodo que sele pase
-function enviarDatos(metodo, id = "", data = "") {
+function enviarDatos(metodo, ids, data = "") {
   let formulario = d.querySelector("#form-acciones")
   console.log(metodo);
   if (metodo == "POST" || metodo == "PUT") {
     data = cargarDatos()
   }
-  console.log('data:', metodo,id) 
+  console.log('data:', metodo, id)
   ajax({
-    url: (id > 0) ? `http://localhost:3000/alumnos/${id}` : `http://localhost:3000/alumnos`,
+    url: (id) ? `http://localhost:3000/alumnos/${ids}` : `http://localhost:3000/alumnos`,
     method: metodo,
     succes: (opciones) => {
       console.log("datos", opciones)
       getDatos();
-      activarDesactivar();
+      if (metodo != "DELETE") {
+        activarDesactivar();
+      }
     },
     error: (er) => procesarError(er),
     datos: data
@@ -147,7 +152,7 @@ function cargarFormulario(datos = null) {
   d.querySelector('#btn-cancelar').addEventListener('click', cancelar)
   d.querySelector('#btn-enviar').addEventListener('click', e => {
     e.preventDefault()
-    enviarDatos(metodo)
+    enviarDatos(metodo, id)
   })
 }
 // activa o desactiva el select, el boton añadir proyecto y los botones de elimnar o actualizar
