@@ -7,6 +7,7 @@ const d = document,
   listado = d.querySelector("main");
 let metodo = "";
 let id = "";
+let btnAdd = "";
 //FUNCIONES
 function ajax(options) {
   let {
@@ -51,7 +52,7 @@ function renderAlumnos(alumnos) {
   siExisteBorrar('#listado-datos')
   siExisteBorrar('#acciones');
   const fragmento = document.createDocumentFragment()
-  console.log(alumnos)
+  // console.log(alumnos)
   if (alumnos.length > 0) {
     alumnos.forEach(el => {
       let item = tempItem.cloneNode(true)
@@ -77,20 +78,14 @@ function renderAlumnos(alumnos) {
       el.innerHTML = "";
     });
   }
-  d.querySelector('#btn-proyecto').href = '#';
-  //d.querySelector('#btn-proyecto').setAttribute('onclick', "cargarFormulario()")
-  d.querySelector('#btn-proyecto').addEventListener('click', e => {
-    e.preventDefault();
-    cargarFormulario()
-    d.querySelector('#btn-enviar').value = "AÑADIR";
-    d.querySelector("span").innerHTML = "Añadir"
-    metodo = "POST"
-    id = "";
-  })
+  btnAdd = d.querySelector('#btn-proyecto')
+  btnAdd.href = '#';
+  //btnAdd.setAttribute('onclick', "cargarFormulario()")
+  btnAdd.addEventListener('click', add)
   d.querySelectorAll('i.fa-undo-alt').forEach(el => {
-    metodo = "PUT"
     el.addEventListener('click', e => {
       e.preventDefault()
+      metodo = "PUT"
       id = e.target.dataset.alumno;
       ajax({
         url: `http://localhost:3000/alumnos/${e.target.dataset.alumno}`,
@@ -107,28 +102,37 @@ function renderAlumnos(alumnos) {
   d.querySelectorAll('i.fa-trash').forEach(el => {
     el.addEventListener('click', e => {
       e.preventDefault()
+      metodo = "DELETE"
       id = e.target.dataset.alumno
-      enviarDatos("DELETE", id)
+      enviarDatos(metodo, id)
     })
   })
 
 }
+// modifica el formulario para añadir
+function add() {
+  cargarFormulario()
+  d.querySelector('#btn-enviar').value = "AÑADIR";
+  d.querySelector("span").innerHTML = "Añadir"
+  metodo = "POST"
+  id = "";
+}
 // añade, actualiza o borra segun el metodo que sele pase
 function enviarDatos(metodo, ids, data = "") {
-  let formulario = d.querySelector("#form-acciones")
   console.log(metodo);
   if (metodo == "POST" || metodo == "PUT") {
     data = cargarDatos()
   }
-  console.log('data:', metodo, id)
+  console.log('data:', metodo, ids)
   ajax({
-    url: (id) ? `http://localhost:3000/alumnos/${ids}` : `http://localhost:3000/alumnos`,
+    url: (ids) ? `http://localhost:3000/alumnos/${ids}` : `http://localhost:3000/alumnos`,
     method: metodo,
     succes: (opciones) => {
       console.log("datos", opciones)
       getDatos();
       if (metodo != "DELETE") {
         activarDesactivar();
+        btnAdd.addEventListener('click', add)
       }
     },
     error: (er) => procesarError(er),
@@ -138,6 +142,7 @@ function enviarDatos(metodo, ids, data = "") {
 
 function cargarFormulario(datos = null) {
   siExisteBorrar('#acciones');
+  btnAdd.removeEventListener('click', add)
   let formu = tempForm.cloneNode(true);
   if (datos) {
     formu.querySelector("#nombre").value = datos.nombre
@@ -173,6 +178,7 @@ function siExisteBorrar(id) {
 function cancelar() {
   siExisteBorrar('#acciones');
   activarDesactivar();
+  btnAdd.addEventListener('click', add)
 }
 // recoge los datos del formulario
 function cargarDatos() {
@@ -189,14 +195,18 @@ function cargarDatos() {
 }
 // obtener datos de la BBDD
 function getDatos() {
-  ajax({
-    url: `http://localhost:3000/alumnos?ciclo=${select.value}`,
-    method: "GET",
-    succes: (opciones) => {
-      renderAlumnos(opciones)
-    },
-    error: (er) => procesarError(er),
-  })
+  if (select.value > 0) {
+    ajax({
+      url: `http://localhost:3000/alumnos?ciclo=${select.value}`,
+      method: "GET",
+      succes: (opciones) => {
+        renderAlumnos(opciones)
+      },
+      error: (er) => procesarError(er),
+    })
+  } else {
+    siExisteBorrar("#listado-datos")
+  }
 }
 // EVENTOS
 
