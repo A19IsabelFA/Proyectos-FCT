@@ -15,14 +15,14 @@ function ajax(options) {
     method,
     succes,
     error,
-    data
+    datos
   } = options;
   const opciones = {
     method: method || "GET",
     headers: {
-      "Content-Type": "application/json"
+      "Content-Type": "application/json; charset=UTF-8"
     },
-    body: JSON.stringify(data)
+    body: JSON.stringify(datos)
   }
   fetch(url, opciones)
     .then(respuesta => {
@@ -77,6 +77,8 @@ function renderAlumnos(alumnos) {
     d.querySelectorAll('#tabla-datos p').forEach(el => {
       el.innerHTML = "";
     });
+    listado.querySelector("#izquierda").remove()
+    listado.querySelector("#derecha").remove()
   }
   btnAdd = d.querySelector('#btn-proyecto')
   btnAdd.href = '#';
@@ -119,11 +121,11 @@ function add() {
 }
 // añade, actualiza o borra segun el metodo que sele pase
 function enviarDatos(metodo, ids, data = "") {
-  console.log(metodo);
-  if (metodo == "POST" || metodo == "PUT") {
+  //console.log(metodo);
+  if (metodo != "DELETE") {
     data = cargarDatos()
   }
-  console.log('data:', metodo, ids)
+  console.log('data:', metodo, ids, data)
   ajax({
     url: (ids) ? `http://localhost:3000/alumnos/${ids}` : `http://localhost:3000/alumnos`,
     method: metodo,
@@ -208,6 +210,7 @@ function getDatos() {
     siExisteBorrar("#listado-datos")
   }
 }
+
 // EVENTOS
 
 // al cargar la pagina
